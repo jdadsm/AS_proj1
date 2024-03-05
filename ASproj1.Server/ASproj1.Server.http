@@ -1,0 +1,6 @@
+@ASproj1.Server_HostAddress = https://localhost:7026
+
+GET {{ASproj1.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
