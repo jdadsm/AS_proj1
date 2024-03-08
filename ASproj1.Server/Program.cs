@@ -17,7 +17,7 @@ namespace ASproj1.Server
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
             builder.Services.AddAuthorization();
-            builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+            builder.Services.AddIdentityApiEndpoints<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             // Add services to the container.
@@ -31,9 +31,9 @@ namespace ASproj1.Server
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.MapIdentityApi<ApplicationUser>();
+            app.MapIdentityApi<IdentityUser>();
 
-            app.MapPost("/logout", async (SignInManager<ApplicationUser> signInManager) =>
+            app.MapPost("/logout", async (SignInManager<IdentityUser> signInManager) =>
             {
 
                 await signInManager.SignOutAsync();

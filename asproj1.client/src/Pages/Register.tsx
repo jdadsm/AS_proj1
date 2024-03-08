@@ -39,7 +39,7 @@ function Register() {
             // clear error message
             setError("");
             // post data to the /register api
-            fetch("/register", {
+            fetch("/api/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
