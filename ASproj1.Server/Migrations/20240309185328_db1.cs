@@ -51,6 +51,19 @@ namespace ASproj1.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MedicalRecord",
+                columns: table => new
+                {
+                    MedicalRecordNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DiagnosisDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TreatmentPlan = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicalRecord", x => x.MedicalRecordNumber);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -156,6 +169,31 @@ namespace ASproj1.Server.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Patients",
+                columns: table => new
+                {
+                    PatientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MedicalRecordNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    AccessCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Patients", x => x.PatientId);
+                    table.ForeignKey(
+                        name: "FK_Patients_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Patients_MedicalRecord_MedicalRecordNumber",
+                        column: x => x.MedicalRecordNumber,
+                        principalTable: "MedicalRecord",
+                        principalColumn: "MedicalRecordNumber",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,6 +232,16 @@ namespace ASproj1.Server.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Patients_MedicalRecordNumber",
+                table: "Patients",
+                column: "MedicalRecordNumber");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Patients_UserId",
+                table: "Patients",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -215,10 +263,16 @@ namespace ASproj1.Server.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Patients");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "MedicalRecord");
         }
     }
 }

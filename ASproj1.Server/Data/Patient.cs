@@ -9,14 +9,13 @@ namespace ASproj1.Server.Data
         [Key]
         public string PatientId { get; set; }
         public MedicalRecord MedicalRecord { get; set; }
-        public IdentityUser User { get; set; }
+        public ApplicationUser User { get; set; }
         public string AccessCode { get; set; }
         public Patient()
         {
             this.PatientId = Guid.NewGuid().ToString();
-            this.MedicalRecord = new MedicalRecord();
-            MedicalRecord.MedicalRecordNumber = this.PatientId;
-            this.User = new IdentityUser
+            this.MedicalRecord = new MedicalRecord(this.PatientId);
+            this.User = new ApplicationUser
             {
                 Id = this.PatientId
             };
@@ -25,14 +24,18 @@ namespace ASproj1.Server.Data
         public Patient(string email, string password)
         {
             this.PatientId = Guid.NewGuid().ToString();
-            this.MedicalRecord = new MedicalRecord();
-            MedicalRecord.MedicalRecordNumber = this.PatientId;
-            this.User = new IdentityUser
+            this.MedicalRecord = new MedicalRecord(this.PatientId);
+            this.User = new ApplicationUser
             {
+                UserName = email,
+                NormalizedUserName = email.ToUpper(),
                 Email = email,
-                PasswordHash = password,
-                Id = this.PatientId
+                NormalizedEmail = email.ToUpper(),
+                Id = this.PatientId,
+                LockoutEnabled = true
             };
+            var passwordHasher = new PasswordHasher<ApplicationUser>();
+            User.PasswordHash = passwordHasher.HashPassword(this.User, password);
             this.AccessCode = string.Empty;
         }
          

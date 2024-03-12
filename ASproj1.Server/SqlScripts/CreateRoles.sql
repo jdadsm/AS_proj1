@@ -1,0 +1,21 @@
+DROP ROLE HelpDesk;
+GO
+
+DROP ROLE DefaultUser;
+GO
+
+CREATE ROLE HelpDesk;
+GO
+
+GRANT SELECT, UPDATE ON AspNetRoles TO HelpDesk;
+GO
+GRANT SELECT, UPDATE ON MedicalRecords TO HelpDesk;
+GO
+
+CREATE ROLE DefaultUser;
+GO
+
+GRANT SELECT, UPDATE TO DefaultUser;
+GO
+
+GRANT UNMASK TO DefaultUser

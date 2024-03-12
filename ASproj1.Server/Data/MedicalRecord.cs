@@ -8,9 +8,10 @@ namespace ASproj1.Server.Data
         public string MedicalRecordNumber { get; set; }
         public string DiagnosisDetails { get; set; }
         public string TreatmentPlan { get; set; }
-        public MedicalRecord() 
+        public Patient Patient { get; set; }
+        public MedicalRecord(string MedicalRecordNumber) 
         {
-            this.MedicalRecordNumber = Guid.NewGuid().ToString();
+            this.MedicalRecordNumber = MedicalRecordNumber;
             this.DiagnosisDetails = string.Empty;
             this.TreatmentPlan = string.Empty;
         }
