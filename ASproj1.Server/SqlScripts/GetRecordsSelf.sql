@@ -1,8 +1,7 @@
-DROP PROCEDURE IF EXISTS GetRecords;
+DROP PROCEDURE IF EXISTS GetRecordsSelf;
 GO
-CREATE PROCEDURE GetRecords
-    @UserId NVARCHAR(MAX),
-    @ExecuteAs NVARCHAR(MAX)
+CREATE PROCEDURE GetRecordsSelf
+    @UserId NVARCHAR(MAX)
 AS
 BEGIN
     
@@ -13,27 +12,12 @@ BEGIN
         TreatmentPlan NVARCHAR(MAX)
     )
 
-    DECLARE @DynamicSQL NVARCHAR(MAX);
-
-    IF @ExecuteAs = 'DefaultUser'
-    BEGIN
-        SET @DynamicSQL = 'EXECUTE AS USER = ''DefaultUser'';';
-    END
-    ELSE
-    BEGIN
-        SET @DynamicSQL = 'EXECUTE AS USER = ''HelpDesk'';';
-    END;
-
-    EXEC sp_executesql @DynamicSQL;
-
     INSERT INTO @Result (UserName, PhoneNumber, DiagnosisDetails, TreatmentPlan)
     SELECT UserName, PhoneNumber, DiagnosisDetails, TreatmentPlan
     FROM AspNetUsers 
     JOIN MedicalRecords ON AspNetUsers.Id = MedicalRecords.MedicalRecordNumber
     JOIN Patients ON AspNetUsers.Id = Patients.PatientId
     WHERE AspNetUsers.Id = @UserId;
-
-    REVERT;
 
     SELECT * FROM @Result;
 

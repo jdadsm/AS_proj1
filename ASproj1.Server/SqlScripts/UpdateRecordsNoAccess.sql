@@ -1,11 +1,8 @@
-DROP PROCEDURE IF EXISTS UpdateRecords;
+DROP PROCEDURE IF EXISTS UpdateRecordsNoAccess;
 GO
-CREATE PROCEDURE UpdateRecords
+CREATE PROCEDURE UpdateRecordsNoAccess
     @UserId NVARCHAR(MAX),
     @ExecuteAs NVARCHAR(MAX),
-    @PhoneNumber NVARCHAR(MAX),
-    @TreatmentPlan NVARCHAR(MAX),
-    @DiagnosisDetails NVARCHAR(MAX),
     @FullName NVARCHAR(MAX)
 AS
 BEGIN
@@ -24,14 +21,8 @@ BEGIN
     EXEC sp_executesql @DynamicSQL;
     
     UPDATE AspNetUsers
-    SET PhoneNumber = @PhoneNumber,
-        UserName = @FullName
+    SET UserName = @FullName
     WHERE Id = @UserId
-
-    UPDATE MedicalRecords
-    SET TreatmentPlan = @TreatmentPlan,
-        DiagnosisDetails = @DiagnosisDetails
-    WHERE MedicalRecordNumber = @UserId
 
     REVERT;
 

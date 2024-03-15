@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ASproj1.Server.Data
 {
@@ -8,37 +9,31 @@ namespace ASproj1.Server.Data
     {
         [Key]
         public string PatientId { get; set; }
-        public MedicalRecord MedicalRecord { get; set; }
-        public ApplicationUser User { get; set; }
+        public string? MedicalRecordId { get; set; }
+        [ForeignKey("MedicalRecordId")]
+        public MedicalRecord? MedicalRecord { get; set; }
+        public string? UserId { get; set; }
+        [ForeignKey("UserId")]
+        public ApplicationUser? User { get; set; }
         public string AccessCode { get; set; }
-        public Patient()
+        public string Role {  get; set; }
+        public Patient(string accessCode)
         {
             this.PatientId = Guid.NewGuid().ToString();
-            this.MedicalRecord = new MedicalRecord(this.PatientId);
-            this.User = new ApplicationUser
-            {
-                Id = this.PatientId
-            };
-            this.AccessCode = string.Empty;
+            this.Role = "DefaultUser";
+            this.AccessCode = accessCode;
         }
-        public Patient(string email, string password)
+
+        public Patient(string medicalRecordId, string userId, string accessCode)
         {
             this.PatientId = Guid.NewGuid().ToString();
-            this.MedicalRecord = new MedicalRecord(this.PatientId);
-            this.User = new ApplicationUser
-            {
-                UserName = email,
-                NormalizedUserName = email.ToUpper(),
-                Email = email,
-                NormalizedEmail = email.ToUpper(),
-                Id = this.PatientId,
-                LockoutEnabled = true
-            };
-            var passwordHasher = new PasswordHasher<ApplicationUser>();
-            User.PasswordHash = passwordHasher.HashPassword(this.User, password);
-            this.AccessCode = string.Empty;
+            this.MedicalRecordId = medicalRecordId;
+            this.UserId = userId;
+            this.AccessCode = accessCode;
+
+            this.Role = "DefaultUser";
         }
-         
+
 
     }
 }

@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import { MDBInputGroup, MDBBtn } from 'mdb-react-ui-kit';
 
-export default function PatientRecords() {
+export default function HelpDeskRecords() {
     const [formData, setFormData] = useState({
         fullName: '',
         phoneNumber: '',
         diagnosisDetails: '',
         treatmentPlan: ''
+    });
+
+    const [input, setInput] = useState({
+        emailInput: '',
+        accessCodeInput: ''
     });
 
     const handleChange = (e: { target: { name: string; value: string; }; }) => {
@@ -17,11 +22,22 @@ export default function PatientRecords() {
         }));
     };
 
+    const handleChangeInput = (e: { target: { name: string; value: string; }; }) => {
+        const { name, value } = e.target;
+        setInput(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
     const handleSubmit = () => {
         const jsonData = {
-            ...formData,
-            email: '',
-            accessCode: ''
+            fullName: formData.fullName,
+            phoneNumber: formData.phoneNumber,
+            diagnosisDetails: formData.diagnosisDetails,
+            treatmentPlan: formData.treatmentPlan,
+            email: input.emailInput,
+            accessCode: input.accessCodeInput
         };
         fetch('/api/records', {
             method: 'PATCH',
@@ -42,9 +58,18 @@ export default function PatientRecords() {
             });
     };
 
-    const handleGetRecords = async () => {
+    const handlePostRecords = async () => {
         try {
-            const response = await fetch('/api/records');
+            const response = await fetch('/api/records', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: input.emailInput,
+                    accessCode: input.accessCodeInput
+                })
+            });
 
             if (!response.ok) {
                 throw new Error('Failed to fetch records');
@@ -89,7 +114,7 @@ export default function PatientRecords() {
                     placeholder='Diagnosis Details'
                 />
             </MDBInputGroup>
-            <MDBInputGroup style={{ marginBottom: '1rem' }}>
+            <MDBInputGroup style={{ marginBottom: '10rem' }}>
                 <textarea
                     className='form-control'
                     name='treatmentPlan'
@@ -98,8 +123,27 @@ export default function PatientRecords() {
                     placeholder='Treatment Plan'
                 />
             </MDBInputGroup>
+
+            <MDBInputGroup style={{ marginBottom: '1rem' }}>
+                <input
+                    className='form-control'
+                    name='emailInput'
+                    value={input.emailInput}
+                    onChange={handleChangeInput}
+                    placeholder='Email input'
+                />
+            </MDBInputGroup>
+            <MDBInputGroup style={{ marginBottom: '1rem' }}>
+                <input
+                    className='form-control'
+                    name='accessCodeInput'
+                    value={input.accessCodeInput}
+                    onChange={handleChangeInput}
+                    placeholder='AccessCode input'
+                />
+            </MDBInputGroup>
             <MDBBtn onClick={handleSubmit}>Update</MDBBtn>
-            <MDBBtn onClick={handleGetRecords}>Get</MDBBtn>
+            <MDBBtn onClick={handlePostRecords}>Get</MDBBtn>
         </>
     );
 }

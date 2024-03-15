@@ -8,8 +8,8 @@ namespace ASproj1.Server.Data
         public string MedicalRecordNumber { get; set; }
         public string DiagnosisDetails { get; set; }
         public string TreatmentPlan { get; set; }
-        public Patient Patient { get; set; }
-        public MedicalRecord(string MedicalRecordNumber) 
+        public Patient? Patient { get; set; }
+        public MedicalRecord(string MedicalRecordNumber)
         {
             this.MedicalRecordNumber = MedicalRecordNumber;
             this.DiagnosisDetails = string.Empty;

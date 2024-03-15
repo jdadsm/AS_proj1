@@ -1,21 +1,22 @@
-DROP ROLE HelpDesk;
+DROP USER IF EXISTS HelpDesk;
+DROP USER IF EXISTS DefaultUser;
+
+CREATE USER HelpDesk WITHOUT LOGIN;
 GO
 
-DROP ROLE DefaultUser;
+CREATE USER DefaultUser WITHOUT LOGIN;
 GO
 
-CREATE ROLE HelpDesk;
-GO
 
-GRANT SELECT, UPDATE ON AspNetRoles TO HelpDesk;
-GO
-GRANT SELECT, UPDATE ON MedicalRecords TO HelpDesk;
-GO
+ALTER ROLE db_datareader ADD MEMBER HelpDesk;
 
-CREATE ROLE DefaultUser;
-GO
+ALTER ROLE db_datareader ADD MEMBER DefaultUser;
+
+
+GRANT UNMASK TO DefaultUser;
+
+GRANT SELECT, UPDATE ON AspNetUsers(UserName) TO HelpDesk;
 
 GRANT SELECT, UPDATE TO DefaultUser;
-GO
 
-GRANT UNMASK TO DefaultUser
+

@@ -21,7 +21,7 @@ function LogoutLink(props: { children: React.ReactNode }) {
 
                     navigate("/login");
                 }
-                else { }
+                
 
 
             })

@@ -65,6 +65,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/api/role': {
+                target,
+                secure: false
+            },
             '^/api/records': {
                 target,
                 secure: false

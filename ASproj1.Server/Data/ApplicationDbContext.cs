@@ -19,16 +19,6 @@ namespace ASproj1.Server.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
-            builder.Entity<Patient>()
-                .HasOne(p => p.MedicalRecord)
-                .WithOne(m => m.Patient)
-                .HasForeignKey<MedicalRecord>(m => m.MedicalRecordNumber);
-
-            builder.Entity<Patient>()
-                .HasOne(p => p.User)
-                .WithOne(m => m.Patient)
-                .HasForeignKey<ApplicationUser>(u => u.Id);
-
             base.OnModelCreating(builder);
             
         }

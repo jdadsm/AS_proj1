@@ -114,7 +114,25 @@ namespace ASproj1.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("MedicalRecordId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("PatientId");
+
+                    b.HasIndex("MedicalRecordId")
+                        .IsUnique()
+                        .HasFilter("[MedicalRecordId] IS NOT NULL");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Patients");
                 });
@@ -252,26 +270,19 @@ namespace ASproj1.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ASproj1.Server.Data.ApplicationUser", b =>
+            modelBuilder.Entity("ASproj1.Server.Data.Patient", b =>
                 {
-                    b.HasOne("ASproj1.Server.Data.Patient", "Patient")
-                        .WithOne("User")
-                        .HasForeignKey("ASproj1.Server.Data.ApplicationUser", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("ASproj1.Server.Data.MedicalRecord", "MedicalRecord")
+                        .WithOne("Patient")
+                        .HasForeignKey("ASproj1.Server.Data.Patient", "MedicalRecordId");
 
-                    b.Navigation("Patient");
-                });
+                    b.HasOne("ASproj1.Server.Data.ApplicationUser", "User")
+                        .WithOne("Patient")
+                        .HasForeignKey("ASproj1.Server.Data.Patient", "UserId");
 
-            modelBuilder.Entity("ASproj1.Server.Data.MedicalRecord", b =>
-                {
-                    b.HasOne("ASproj1.Server.Data.Patient", "Patient")
-                        .WithOne("MedicalRecord")
-                        .HasForeignKey("ASproj1.Server.Data.MedicalRecord", "MedicalRecordNumber")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("MedicalRecord");
 
-                    b.Navigation("Patient");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -325,13 +336,15 @@ namespace ASproj1.Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ASproj1.Server.Data.Patient", b =>
+            modelBuilder.Entity("ASproj1.Server.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("MedicalRecord")
+                    b.Navigation("Patient")
                         .IsRequired();
+                });
 
-                    b.Navigation("User")
-                        .IsRequired();
+            modelBuilder.Entity("ASproj1.Server.Data.MedicalRecord", b =>
+                {
+                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,8 +1,7 @@
-DROP PROCEDURE IF EXISTS UpdateRecords;
+DROP PROCEDURE IF EXISTS UpdateRecordsSelf;
 GO
-CREATE PROCEDURE UpdateRecords
+CREATE PROCEDURE UpdateRecordsSelf
     @UserId NVARCHAR(MAX),
-    @ExecuteAs NVARCHAR(MAX),
     @PhoneNumber NVARCHAR(MAX),
     @TreatmentPlan NVARCHAR(MAX),
     @DiagnosisDetails NVARCHAR(MAX),
@@ -10,19 +9,6 @@ CREATE PROCEDURE UpdateRecords
 AS
 BEGIN
 
-    DECLARE @DynamicSQL NVARCHAR(MAX);
-
-    IF @ExecuteAs = 'DefaultUser'
-    BEGIN
-        SET @DynamicSQL = 'EXECUTE AS USER = ''DefaultUser'';';
-    END
-    ELSE
-    BEGIN
-        SET @DynamicSQL = 'EXECUTE AS USER = ''HelpDesk'';';
-    END;
-
-    EXEC sp_executesql @DynamicSQL;
-    
     UPDATE AspNetUsers
     SET PhoneNumber = @PhoneNumber,
         UserName = @FullName
@@ -32,7 +18,5 @@ BEGIN
     SET TreatmentPlan = @TreatmentPlan,
         DiagnosisDetails = @DiagnosisDetails
     WHERE MedicalRecordNumber = @UserId
-
-    REVERT;
 
 END

@@ -7,6 +7,7 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [accessCode, setAccessCode] = useState("");
     const navigate = useNavigate();
 
     // state variable for error messages
@@ -23,6 +24,7 @@ function Register() {
         if (name === "email") setEmail(value);
         if (name === "password") setPassword(value);
         if (name === "confirmPassword") setConfirmPassword(value);
+        if (name === "accessCode") setAccessCode(value);
     };
 
     // handle submit event for the form
@@ -47,6 +49,7 @@ function Register() {
                 body: JSON.stringify({
                     email: email,
                     password: password,
+                    accessCode: accessCode,
                 }),
             })
                 //.then((response) => response.json())
@@ -100,6 +103,16 @@ function Register() {
                         id="confirmPassword"
                         name="confirmPassword"
                         value={confirmPassword}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="accessCode">Access Code:</label></div><div>
+                    <input
+                        type="accessCode"
+                        id="accessCode"
+                        name="accessCode"
+                        value={accessCode}
                         onChange={handleChange}
                     />
                 </div>

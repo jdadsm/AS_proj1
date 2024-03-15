@@ -22,8 +22,27 @@ function Login() {
         navigate("/register");
     }
 
+    // Define an async function to wrap your code
+    const fetchRole = async () => {
+        try {
+            const response = await fetch('/api/role');
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch role');
+            }
+
+            const data = await response.json();
+            return data["role"]
+        } catch (error) {
+            console.error('Error fetching role:', error);
+        }
+
+        return "DefaultUser";
+    };
+
+
     // handle submit event for the form
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // validate email and passwords
         if (!email || !password) {
@@ -33,7 +52,7 @@ function Login() {
             setError("");
             // post data to the /register api
 
-            var loginurl = "";
+            let loginurl = "";
             if (rememberme == true)
                 loginurl = "/login?useCookies=true";
             else
@@ -50,13 +69,21 @@ function Login() {
                 }),
             })
 
-                .then((data) => {
+                .then(async (data) => {
                     // handle success or error from the server
                     console.log(data);
                     if (data.ok) {
+                        const role = await fetchRole();
+
                         setError("Successful Login.");
-                        window.location.href = '/';
+
+                        if (role === "HelpDesk") {
+                            window.location.href = '/helpdesk';
+                        } else {
+                            window.location.href = '/';
+                        }
                     }
+
                     else
                         setError("Error Logging In.");
 

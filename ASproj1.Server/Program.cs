@@ -27,6 +27,8 @@ namespace ASproj1.Server
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            ExecuteInitializationScripts();
+
             var app = builder.Build();
 
             app.UseDefaultFiles();
@@ -66,6 +68,27 @@ namespace ASproj1.Server
             app.MapFallbackToFile("/index.html");
 
             app.Run();
+        }
+
+        private static void ExecuteInitializationScripts()
+        {
+            try
+            {
+                var script1 = File.ReadAllText("SQLScripts/CreateRoles.sql");
+                var script2 = File.ReadAllText("SQLScripts/DefineMaskedColumns.sql");
+                var script3 = File.ReadAllText("SQLScripts/GetRecords.sql");
+                var script4 = File.ReadAllText("SQLScripts/GetRecordsSelf.sql");
+                var script5 = File.ReadAllText("SQLScripts/GetRole.sql");
+                var script6 = File.ReadAllText("SQLScripts/UpdateRecords.sql");
+                var script7 = File.ReadAllText("SQLScripts/UpdateRecordsSelf.sql");
+                var script8 = File.ReadAllText("SQLScripts/UpdateRecordsNoAccess.sql");
+
+            }
+            catch (Exception ex)
+            {
+                
+                Console.WriteLine($"Error executing initialization scripts: {ex.Message}");
+            }
         }
     }
 }
